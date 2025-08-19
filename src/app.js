@@ -1,18 +1,20 @@
 import express from 'express';
-import dotenv from "dotenv";
 import { shorten } from './middleware/shorten.js';
-import { db } from '../db/mongoConn.js';
 
-dotenv.config()
 const app = express();
 const PORT = 3000;
+
+app.use(express.json());
 
 app.get('/:id', (req, res) => {
     res.send(`Get ID ${req.params.id}`)
 })
 
 app.post("/shorten", shorten, (req, res) => {
-    res.sendStatus(201).json({"url": "Some url"})
+    const response = {
+        "url": req.body.url
+    }
+    res.status(201).json(response);
 })
 
 app.listen(

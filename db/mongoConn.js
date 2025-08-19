@@ -1,7 +1,9 @@
 import { MongoClient } from "mongodb";
+import dotenv from 'dotenv';
 
+dotenv.config();
 const connectionString = process.env.ATLAS_URL;
-const client = new MongoClient(connectionString)
+const client = new MongoClient(connectionString);
 let conn;
 
 try {
@@ -11,5 +13,5 @@ catch(e) {
     console.error(e);
 }
 
-let db = conn.db();
-export default db;
+export const db = conn.db("url-shortener-db");
+
