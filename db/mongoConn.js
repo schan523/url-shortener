@@ -13,5 +13,6 @@ catch(e) {
     console.error(e);
 }
 
-export const db = conn.db("url-shortener-db");
+const db = conn.db("url-shortener-db");
+export { db }
 

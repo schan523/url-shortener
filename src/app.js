@@ -12,8 +12,13 @@ app.get('/:id', (req, res) => {
 
 app.post("/shorten", shorten, (req, res) => {
     const response = {
-        "url": req.body.url
+        "id": req.id,
+        "url": req.body.url,
+        "shortCode": req.shortCode,
+        "createdAt": req.createdAt,
+        "updatedAt": req.updatedAt
     }
+    console.log(response);
     res.status(201).json(response);
 })
 
