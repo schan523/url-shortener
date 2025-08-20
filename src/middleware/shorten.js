@@ -9,7 +9,8 @@ export const shorten = async (req, res, next) => {
     const exists = await collection.findOne({url: {$eq: req.body.url}});
 
     if (exists) {
-        const err = new Error("A shortenCode for this url already exists.", 400);
+        const err = new Error("A shortCode for this url already exists.");
+        err.status = 400;
         next(err);
     }   
     else {

@@ -1,5 +1,6 @@
 import express from 'express';
 import { shorten } from './middleware/shorten.js';
+import { retrieveUrl } from './middleware/retrieveUrl.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 const app = express();
@@ -20,6 +21,13 @@ app.post("/shorten", shorten, (req, res) => {
         "updatedAt": req.updatedAt
     }
     res.status(201).json(response);
+})
+
+app.get("/shorten/:shortCode", retrieveUrl, (req, res) => {
+    // res.status(200).send(req.doc);
+    console.log(req.doc);
+    const originalUrl = "https://"+req.doc.url
+    res.redirect(originalUrl);
 })
 
 app.use(errorHandler);
