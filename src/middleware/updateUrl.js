@@ -7,7 +7,6 @@ export const updateUrl = async (req, res, next) => {
 
     const doc = await collection.findOne({shortCode: {$eq: code}});
     const doc_ = await collection.findOne({url: {$eq: req.params.url}});
-    console.log(req.params);
 
     if (!req.body.url) {
         const err = new Error("No url was given.");
@@ -29,10 +28,13 @@ export const updateUrl = async (req, res, next) => {
             { shortCode: code},
             {
                 $set: {"url": req.body.url},
+                $inc: {accessCount: 1},
                 $currentDate: { "updatedAt": true }
             }
         );
-        req.doc = await collection.findOne({shortCode: {$eq: code}})
+        const newDoc = await collection.findOne({shortCode: {$eq: code}});
+        const {accessCount, ...newDoc_} = newDoc;
+        req.doc = newDoc_;
         next();
     }
 }

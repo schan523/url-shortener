@@ -26,7 +26,8 @@ export const createUrl = async (req, res, next) => {
             "url": req.body.url,
             "shortCode": shortCode,
             "createdAt": req.createdAt,
-            "updatedAt": req.updatedAt
+            "updatedAt": req.updatedAt,
+            "accessCount": 0  
         };
 
         const result = await collection.insertOne(data);
