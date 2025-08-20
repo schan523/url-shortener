@@ -2,7 +2,7 @@ import { db } from '../../db/mongoConn.js';
 import 'mongodb';
 import { generateShortCode, validateUrl} from '../utils.js';
 
-export const shorten = async (req, res, next) => {
+export const createUrl = async (req, res, next) => {
     const collection = db.collection("urls");
     const shortCode = await generateShortCode(collection);
 
@@ -30,8 +30,7 @@ export const shorten = async (req, res, next) => {
         };
 
         const result = await collection.insertOne(data);
-        req.id = result.insertedId;
-        req.shortCode = data.shortCode;
+        req.data = data;
         next();
     }
 }
