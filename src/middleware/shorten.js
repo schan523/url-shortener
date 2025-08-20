@@ -5,22 +5,30 @@ import * as crypto from 'crypto';
 export const shorten = async (req, res, next) => {
     const collection = db.collection("urls");
     const shortCode = await generateShortCode(collection);
-    const time = new Date();
-    req.createdAt = time;
-    req.updatedAt = time;
 
-    const data = {
-        "url": req.body.url,
-        "shortCode": shortCode,
-        "createdAt": req.createdAt,
-        "updatedAt": req.updatedAt
-    };
+    const exists = await collection.findOne({url: {$eq: req.body.url}});
 
-    const result = await collection.insertOne(data);
-    req.id = result.insertedId;
-    req.shortCode = data.shortCode;
+    if (exists) {
+        const err = new Error("A shortenCode for this url already exists.", 400);
+        next(err);
+    }   
+    else {
+        const time = new Date();
+        req.createdAt = time;
+        req.updatedAt = time;
 
-    next();
+        const data = {
+            "url": req.body.url,
+            "shortCode": shortCode,
+            "createdAt": req.createdAt,
+            "updatedAt": req.updatedAt
+        };
+
+        const result = await collection.insertOne(data);
+        req.id = result.insertedId;
+        req.shortCode = data.shortCode;
+        next();
+    }
 }
 
 const generateShortCode = async (collection) => {

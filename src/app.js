@@ -1,5 +1,6 @@
 import express from 'express';
 import { shorten } from './middleware/shorten.js';
+import { errorHandler } from './middleware/errorHandler.js';
 
 const app = express();
 const PORT = 3000;
@@ -18,9 +19,10 @@ app.post("/shorten", shorten, (req, res) => {
         "createdAt": req.createdAt,
         "updatedAt": req.updatedAt
     }
-    console.log(response);
     res.status(201).json(response);
 })
+
+app.use(errorHandler);
 
 app.listen(
     PORT, () => console.log(`it's alive on http://localhost:${PORT}`)
