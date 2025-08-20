@@ -12,3 +12,17 @@ Project page url: https://roadmap.sh/projects/url-shortening-service
   
 
 ## Project Structure
+```
+├───db  
+    └───mongoConn.js  
+└───src  
+    ├───middleware  
+        └───createUrl.js  
+        └───deleteUrl.js
+         ...  
+    └───routes  
+        └───urls.js
+    └───app.js
+    └───utils.js
+```
+All endpoints are under the urls router, with middleware for each endpoint located in separate files under the middleware folder. A connection to the MongoClient is established in mongoConn.js and exported to the middleware files where the database is accessed. 
