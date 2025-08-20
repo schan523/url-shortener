@@ -1,14 +1,18 @@
 import { db } from '../../db/mongoConn.js';
 import 'mongodb';
-import * as crypto from 'crypto';
+import { generateShortCode, validateUrl} from '../utils.js';
 
 export const shorten = async (req, res, next) => {
     const collection = db.collection("urls");
     const shortCode = await generateShortCode(collection);
 
     const exists = await collection.findOne({url: {$eq: req.body.url}});
-
-    if (exists) {
+    if (!(req.body.url && validateUrl(req.body.url))) {
+        const err = new Error("Invalid url.");
+        err.status = 400;
+        next(err);
+    }
+    else if (exists) {
         const err = new Error("A shortCode for this url already exists.");
         err.status = 400;
         next(err);
@@ -30,15 +34,4 @@ export const shorten = async (req, res, next) => {
         req.shortCode = data.shortCode;
         next();
     }
-}
-
-const generateShortCode = async (collection) => {
-    let code;
-    let exists = true;
-
-    while (exists) {
-        code = crypto.randomBytes(3).toString('hex');
-        exists = await collection.findOne({shortCode: {$eq: code}});
-    }
-    return code;
 }
